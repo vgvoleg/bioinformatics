@@ -4,4 +4,7 @@
 [src](1st_task)
 
 ### Motif search
-TBD
+[src](2nd_task)
+
+### Median string
+[src](2nd_task)
