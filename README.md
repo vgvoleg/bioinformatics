@@ -1,4 +1,7 @@
 # Labs for bioinformatics
 
-### Most frequent template
+### Frequent words problem
+[src](1st_task)
+
+### Motif search
 TBD
