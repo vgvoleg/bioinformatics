@@ -9,3 +9,9 @@
 [src](lab_2_1/find_motif.py)
 ### Median string
 [src](lab_2_2/find_median.py)
+
+## Lab 2
+### Motif search bnb
+[src](lab_3_1/find_motif_bnb.py)
+### Median string bnb
+TBD
