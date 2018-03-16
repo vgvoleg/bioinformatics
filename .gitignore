@@ -6,5 +6,6 @@
 literature/
 
 ### Project files
+.idea/
 **/*/output.txt
 **/*/__pycache__/
