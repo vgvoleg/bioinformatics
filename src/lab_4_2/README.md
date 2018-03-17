@@ -1,0 +1,1 @@
+![alt text](../../images/4_2.jpg)
