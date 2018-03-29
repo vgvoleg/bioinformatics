@@ -7,7 +7,7 @@ def get_score(strings, word):
     score = 0
     for string in strings:
         min_score = float('inf')
-        for i in range(0, len(string) - word_size):
+        for i in range(0, len(string) - word_size + 1):
             ne = 0
             for j in range(0, word_size):
                 if string[i+j] != word[j]:
