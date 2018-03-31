@@ -27,7 +27,11 @@ def get_score(vi, wi, matrix):
     j = letters.index(wi)
     return matrix[i][j]
 
-
+def write_output_data(score, words):
+    with open('output.txt', 'w') as output_file:
+        output_file.write(str(score) + "\n")
+        output_file.write(words["v"] + "\n")
+        output_file.write(words["w"])
 
 
 if __name__ == '__main__':

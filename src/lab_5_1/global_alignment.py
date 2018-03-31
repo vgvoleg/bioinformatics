@@ -2,6 +2,15 @@ import utils
 
 FORFEIT = 5
 
+def calculate_score(words, score_matrix):
+    l = len(words["v"])
+    score = 0
+    for i in range(0, l):
+        if words["v"][i] == '-' or words["w"][i] == '-':
+            score -= FORFEIT
+        else:
+            score += utils.get_score(words["v"][i], words["w"][i], score_matrix)
+    return score
 
 def global_alignment(v, w, score_matrix):
     n = len(v) + 1
@@ -22,43 +31,36 @@ def global_alignment(v, w, score_matrix):
     restore_words(words, s, v, w, n - 1, m - 1)
     words["v"] = words["v"][::-1]
     words["w"] = words["w"][::-1]
-    print(words["v"])
-    print(words["w"])
+    score = calculate_score(words, score_matrix)
+    return score, words
 
- # TODO: refactor
 def restore_words(words, s, v, w, i, j):
     if i == 0 and j == 0:
         return
-    if s[i - 1][j - 1] >= s[i - 1][j] - FORFEIT and s[i - 1][j - 1] >= s[i][j - 1] - FORFEIT:
-        next_i = i - 1
-        next_j = j - 1
-        if i == 0:
-            words["v"] += '-'
-            next_i = i
-        else:
-            words["v"] += v[i - 1]
-
-        if j == 0:
-            words["w"] += '-'
-            next_j = j
-        else:
-            words["w"] += w[j - 1]
-
-        restore_words(words, s, v, w, next_i, next_j)
+    if i == 0:
+        words["v"] += '-'
+        words["w"] += w[j - 1]
+        restore_words(words, s, v, w, i, j - 1)
+    elif j == 0:
+        words["v"] += v[i - 1]
+        words["w"] += '-'
+        restore_words(words, s, v, w, i - 1, j)
+    elif s[i - 1][j - 1] >= s[i - 1][j] - FORFEIT and s[i - 1][j - 1] >= s[i][j - 1] - FORFEIT:
+        words["v"] += v[i - 1]
+        words["w"] += w[j - 1]
+        restore_words(words, s, v, w, i - 1, j - 1)
+    elif s[i - 1][j] >= s[i][j - 1]:
+        words["v"] += v[i - 1]
+        words["w"] += '-'
+        restore_words(words, s, v, w, i - 1, j)
     else:
-        if i == 0 or j == 0:
-            return
-        if s[i - 1][j] >= s[i][j - 1]:
-            words["v"] += v[i - 1]
-            words["w"] += '-'
-            restore_words(words, s, v, w, i - 1, j)
-        else:
-            words["v"] += '-'
-            words["w"] += w[j - 1]
-            restore_words(words, s, v, w, i, j - 1)
+        words["v"] += '-'
+        words["w"] += w[j - 1]
+        restore_words(words, s, v, w, i, j - 1)
 
 
 if __name__ == '__main__':
     v, w = utils.read_input_data()
     score_matrix = utils.read_scoring_matrix()
-    global_alignment(v, w, score_matrix)
+    score, words = global_alignment(v, w, score_matrix)
+    utils.write_output_data(score, words)
