@@ -15,3 +15,7 @@
 ### [Coins exchange problem](src/lab_4_1/)
 ### [Manhattan tourist problem](src/lab_4_2/)
 ### [Longest common substring problem](src/lab_4_3/)
+
+## Lab 5
+### [Global alignment](src/lab_5_1/)
+### [Local alignment](src/lab_5_2/)
