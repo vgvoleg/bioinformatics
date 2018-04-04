@@ -2,24 +2,18 @@ import utils
 
 FORFEIT = 5
 
-def calculate_score(words, score_matrix):
-    l = len(words["v"])
-    score = 0
-    for i in range(0, l):
-        if words["v"][i] == '-' or words["w"][i] == '-':
-            score -= FORFEIT
-        else:
-            score += utils.get_score(words["v"][i], words["w"][i], score_matrix)
-    return score
-
-
 def local_alignment(v, w, score_matrix):
     n = len(v) + 1
     m = len(w) + 1
     s = [[0] * m for i in range(0, n)]
+    b = [["↯"] * m for i in range(0, n)]
+
+    max_elem = {"score": 0, "i": 0, "j": 0}
 
     for i in range(1, n):
         for j in range(1, m):
+            if i == n - 1 and j == m - 1:
+                s[i][j] = max_elem["score"]
             vi = v[i - 1]
             wi = w[j - 1]
             s[i][j] = max( \
@@ -29,41 +23,42 @@ def local_alignment(v, w, score_matrix):
                 s[i - 1][j - 1] + utils.get_score(vi, wi, score_matrix) \
                 )
 
+            if s[i][j] >= max_elem["score"]:
+                max_elem["score"] = s[i][j]
+                max_elem["i"] = i
+                max_elem["j"] = j
+
+            if s[i][j] == s[i - 1][j - 1] + utils.get_score(vi, wi, score_matrix):
+                b[i][j] = "↖"
+            elif s[i][j] == s[i - 1][j] - FORFEIT:
+                b[i][j] = "↑"
+            elif s[i][j] == s[i][j - 1] - FORFEIT:
+                b[i][j] = "←"
+            else:
+                b[i][j] = "↯"
+
     words = {"v": '', "w": ''}
-    restore_words(words, s, v, w, n - 1, m - 1, False)
+    restore_words(words, b, v, w, max_elem["i"], max_elem["j"])
     words["v"] = words["v"][::-1]
     words["w"] = words["w"][::-1]
-    score = calculate_score(words, score_matrix)
-    return score, words
+    return max_elem["score"], words
 
 
-def restore_words(words, s, v, w, i, j, flag):
-    if i == 0 and j == 0 or (s[i][j] == 0 and flag):
+def restore_words(words, b, v, w, i, j):
+    if b[i][j] == "↯":
         return
-    if i == 0:
-        if flag:
-            words["v"] += '-'
-            words["w"] += w[j - 1]
-        restore_words(words, s, v, w, i, j - 1, flag)
-    elif j == 0:
-        if flag:
-            words["v"] += v[i - 1]
-            words["w"] += '-'
-        restore_words(words, s, v, w, i - 1, j, flag)
-    elif s[i - 1][j - 1] > s[i - 1][j] - FORFEIT and s[i - 1][j - 1] > s[i][j - 1] - FORFEIT:
+    elif b[i][j] == "↖":
         words["v"] += v[i - 1]
         words["w"] += w[j - 1]
-        restore_words(words, s, v, w, i - 1, j - 1, True)
-    elif s[i - 1][j] >= s[i][j - 1]:
-        if flag:
-            words["v"] += v[i - 1]
-            words["w"] += '-'
-        restore_words(words, s, v, w, i - 1, j, flag)
+        restore_words(words, b, v, w, i - 1, j - 1)
+    elif b[i][j] == "←":
+        words["v"] += '-'
+        words["w"] += w[j - 1]
+        restore_words(words, b, v, w, i, j - 1)
     else:
-        if flag:
-            words["v"] += '-'
-            words["w"] += w[j - 1]
-        restore_words(words, s, v, w, i, j - 1, flag)
+        words["v"] += v[i - 1]
+        words["w"] += '-'
+        restore_words(words, b, v, w, i - 1, j)
 
 
 if __name__ == '__main__':
