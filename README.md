@@ -19,3 +19,12 @@
 ## Lab 5
 ### [Global alignment](src/lab_5_1/)
 ### [Local alignment](src/lab_5_2/)
+
+## Lab 6
+### [String spectre](src/lab_6_1/)
+### [Overlap graph](src/lab_6_2/)
+### [Graph de Bruijn](src/lab_6_3/)
+
+## Lab 7
+### [Euler Cycle](src/lab_7_1/)
+### [Euler Path](src/lab_7_2/)
