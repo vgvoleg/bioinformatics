@@ -28,3 +28,4 @@
 ## Lab 7
 ### [Euler Cycle](src/lab_7_1/)
 ### [Euler Path](src/lab_7_2/)
+### [Genome building](src/lab_7_3/)
